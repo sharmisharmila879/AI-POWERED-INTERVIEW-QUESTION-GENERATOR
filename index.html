@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Interview Question Generator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Generating AI Questions...</p>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-content">
+                <h1 class="header-title">
+                    <span class="icon">🤖</span>
+                    AI Interview Generator
+                </h1>
+                <p class="header-subtitle">Prepare for your dream job with AI-powered interview questions</p>
+            </div>
+        </div>
+
+        <!-- Setup Section -->
+        <div id="setup-section" class="setup-section">
+            <div class="setup-card">
+                <h2>Interview Setup</h2>
+                
+                <div class="form-group">
+                    <label for="job-role">Job Role</label>
+                    <select id="job-role" class="form-control">
+                        <option value="">Select a job role...</option>
+                        <option value="Frontend Developer">Frontend Developer</option>
+                        <option value="Backend Developer">Backend Developer</option>
+                        <option value="Full Stack Developer">Full Stack Developer</option>
+                        <option value="Data Scientist">Data Scientist</option>
+                        <option value="Product Manager">Product Manager</option>
+                        <option value="UI/UX Designer">UI/UX Designer</option>
+                        <option value="Software Engineer">Software Engineer</option>
+                        <option value="Data Analyst">Data Analyst</option>
+                        <option value="Marketing Manager">Marketing Manager</option>
+                        <option value="DevOps Engineer">DevOps Engineer</option>
+                        <option value="Mobile Developer">Mobile Developer</option>
+                        <option value="QA Engineer">QA Engineer</option>
+                        <option value="Business Analyst">Business Analyst</option>
+                        <option value="Project Manager">Project Manager</option>
+                        <option value="custom">Custom Role</option>
+                    </select>
+                </div>
+
+                <div id="custom-role-group" class="form-group hidden">
+                    <label for="custom-role">Custom Job Role</label>
+                    <input type="text" id="custom-role" class="form-control" placeholder="Enter your custom job role">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="num-questions">Number of Questions</label>
+                        <select id="num-questions" class="form-control">
+                            <option value="5">5 Questions</option>
+                            <option value="8">8 Questions</option>
+                            <option value="10" selected>10 Questions</option>
+                            <option value="12">12 Questions</option>
+                            <option value="15">15 Questions</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="interview-mode">Interview Mode</label>
+                        <select id="interview-mode" class="form-control">
+                            <option value="practice">Practice Mode</option>
+                            <option value="timed">Timed Interview (2 min/question)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="difficulty">Difficulty Level</label>
+                        <select id="difficulty" class="form-control">
+                            <option value="entry">Entry Level (0-2 years)</option>
+                            <option value="mid" selected>Mid Level (2-5 years)</option>
+                            <option value="senior">Senior Level (5+ years)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tone">Answer Style</label>
+                        <select id="tone" class="form-control">
+                            <option value="formal">Professional & Formal</option>
+                            <option value="casual">Conversational & Casual</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button id="start-interview" class="btn btn-primary btn-large">
+                    <span class="btn-icon">🚀</span>
+                    Start AI Interview
+                </button>
+            </div>
+        </div>
+
+        <!-- Interview Section -->
+        <div id="interview-section" class="interview-section hidden">
+            <div class="interview-header">
+                <div class="interview-progress">
+                    <div class="progress-bar">
+                        <div id="progress-fill" class="progress-fill"></div>
+                    </div>
+                    <div id="progress-text" class="progress-text">Question 1 of 10</div>
+                </div>
+                
+                <div id="timer-display" class="interview-timer hidden">
+                    <span class="timer-icon">⏱️</span>
+                    <span id="timer-text">02:00</span>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <div class="question-header">
+                    <span id="question-category" class="question-category">Technical</span>
+                    <span id="question-number" class="question-number">#1</span>
+                </div>
+                
+                <h3 id="question-text" class="question-text">Loading question...</h3>
+                
+                <div class="answer-section">
+                    <label for="user-answer">Your Answer</label>
+                    <textarea 
+                        id="user-answer" 
+                        class="answer-textarea" 
+                        rows="6" 
+                        placeholder="Type your detailed answer here... Be specific and provide examples where possible."
+                    ></textarea>
+                </div>
+
+                <div class="answer-actions">
+                    <button id="show-hint" class="btn btn-ghost">
+                        <span class="btn-icon">💡</span>
+                        Show Hint
+                    </button>
+                    <button id="next-question" class="btn btn-primary">
+                        Next Question
+                        <span class="btn-icon">→</span>
+                    </button>
+                </div>
+
+                <div id="model-answer" class="model-answer hidden">
+                    <h4>💡 Model Answer</h4>
+                    <div id="model-answer-content" class="model-answer-content"></div>
+                </div>
+            </div>
+
+            <div class="interview-controls">
+                <button id="pause-interview" class="btn btn-secondary">⏸️ Pause</button>
+                <button id="end-interview" class="btn btn-danger">End Interview</button>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="results-section" class="results-section hidden">
+            <div class="results-card">
+                <div class="results-header">
+                    <h2>🎉 Interview Complete!</h2>
+                    <div class="overall-score">
+                        <div class="score-circle">
+                            <span id="score-value" class="score-value">85</span>
+                            <span class="score-label">%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="score-breakdown">
+                    <div class="score-metric">
+                        <span class="metric-label">Technical Knowledge</span>
+                        <div class="metric-bar">
+                            <div id="technical-score" class="metric-fill"></div>
+                        </div>
+                        <span id="technical-value" class="metric-value">80%</span>
+                    </div>
+                    <div class="score-metric">
+                        <span class="metric-label">Communication</span>
+                        <div class="metric-bar">
+                            <div id="communication-score" class="metric-fill"></div>
+                        </div>
+                        <span id="communication-value" class="metric-value">90%</span>
+                    </div>
+                    <div class="score-metric">
+                        <span class="metric-label">Problem Solving</span>
+                        <div class="metric-bar">
+                            <div id="problem-solving-score" class="metric-fill"></div>
+                        </div>
+                        <span id="problem-solving-value" class="metric-value">85%</span>
+                    </div>
+                </div>
+
+                <div class="job-readiness">
+                    <h3>Job Readiness Assessment</h3>
+                    <div id="readiness-badge" class="readiness-badge">
+                        <span class="badge-icon">🎯</span>
+                        <span class="badge-text">Ready to Apply!</span>
+                    </div>
+                    <p id="readiness-description" class="readiness-description">
+                        Excellent performance! You demonstrated strong knowledge and communication skills.
+                    </p>
+                </div>
+
+                <div class="results-actions">
+                    <button id="review-answers" class="btn btn-secondary">
+                        <span class="btn-icon">📋</span>
+                        Review Answers
+                    </button>
+                    <button id="download-report" class="btn btn-secondary">
+                        <span class="btn-icon">📄</span>
+                        Download Report
+                    </button>
+                    <button id="retake-interview" class="btn btn-primary">
+                        <span class="btn-icon">🔄</span>
+                        New Interview
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Review Section -->
+        <div id="review-section" class="review-section hidden">
+            <div class="review-header">
+                <h2>📋 Detailed Answer Review</h2>
+                <button id="back-to-results" class="btn btn-secondary">← Back to Results</button>
+            </div>
+            
+            <div id="review-content" class="space-y-6">
+                <!-- Review items will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
